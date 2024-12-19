@@ -191,6 +191,20 @@ class Data_plant(data.Dataset):
         self.constrained_indexes = list(set([index for index in torch.nonzero(self.B)[:, -1].tolist()]))
         self.unconstrained_indexes = [item for item in range(self.B.shape[1]) if item not in self.constrained_indexes]
 
+class Data_plant(data.Dataset):
+    def __init__(self, dataset):
+        self.dataset_tensor = torch.from_numpy(dataset)
+        self.X = self.dataset_tensor[:, :4]
+        self.Y = self.dataset_tensor[:, 4:]
+        self.train_set, self.val_set, self.test_set = self.split_data(0.2)  # initial val_ratio -> 0.2
+
+        self.A = torch.tensor([[1., 1., 1., -1.]])  # (1, 4)
+        self.B = torch.tensor([[-1., 0., -1., 0., -1.]])  # (1, 5)
+        self.b = torch.tensor([0.])  # (1, )
+
+        self.constrained_indexes = list(set([index for index in torch.nonzero(self.B)[:, -1].tolist()]))
+        self.unconstrained_indexes = [item for item in range(self.B.shape[1]) if item not in self.constrained_indexes]
+
     def __len__(self):
         return len(self.dataset_tensor)
 
