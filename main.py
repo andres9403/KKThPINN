@@ -9,7 +9,7 @@ import os
 def add_arguments():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--model', type=str, default='KKThPINN', help='NN, PINN, KKThPINN')
+    parser.add_argument('--model', type=str, default='NN', help='NN, PINN, KKThPINN')
     parser.add_argument('--model_id', type=str)
     parser.add_argument('--input_dim', type=int, default=7, help='3 for cstr, 4 for plant, 5 for distillation, 7 for Membrane')
     parser.add_argument('--hidden_dim', type=int, default=32)
