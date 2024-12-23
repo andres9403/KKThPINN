@@ -30,7 +30,7 @@ def add_arguments():
     parser.add_argument('--dataset_type', type=str, default='membrane', help='choose from cstr, plant, distillation')
     parser.add_argument('--dataset_path', default='/home/andresfel9403/KKThNN/KKThPINN/benchmark_membrane.csv', type=str)
     parser.add_argument('--val_ratio', type=float, default=0.2)
-    parser.add_argument('--job', type=str, default='experiment', help='choose from train, experiment')
+    parser.add_argument('--job', type=str, default='train', help='choose from train, experiment')
     parser.add_argument('--runs', type=int, default=10)
 
     args = parser.parse_args()
