@@ -50,7 +50,7 @@ def main(args):
         elif args.model == 'PINN':
             args.loss_type = 'PINN'
         elif args.model == 'KKThPINN':
-            args.loss_type = 'MSE'
+            args.loss_type = 'MSE' 
         elif args.model == 'AugLagNN':
             args.loss_type = 'MSE'
         elif args.model == 'ECNN':
