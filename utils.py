@@ -21,6 +21,9 @@ def LoadData(args):
     elif args.dataset_type == 'distillation':
         dataset_arr, scaler = load_data(args.dataset_path)
         Data_class = Data_distillation
+    elif args.dataset_type == 'membrane':
+        dataset_arr, scaler = load_data(args.dataset_path)
+        Data_class = Data_membrane
     else:
         raise ValueError('Dataset not supported!')
 
@@ -41,6 +44,9 @@ def LoadData(args):
         B_dep = B[:, :2]
         B_indep = B[:, 2:]
     elif args.dataset_type == 'plant':
+        B_dep = B[:, :1]
+        B_indep = B[:, 1:]
+    elif args.dataset_type == 'membrane':
         B_dep = B[:, :1]
         B_indep = B[:, 1:]
     elif args.dataset_type == 'distillation':
@@ -193,7 +199,7 @@ class Data_plant(data.Dataset):
 
     def __len__(self):
         return len(self.dataset_tensor)
-
+    
     def __getitem__(self, idx):
         return self.dataset_tensor[idx, :]
 
@@ -211,6 +217,39 @@ class Data_plant(data.Dataset):
     def resplit_data(self, val_ratio, test_ratio=0.2):
         self.train_set, self.val_set, self.test_set = self.split_data(val_ratio, test_ratio)
 
+class Data_membrane(data.Dataset):
+    def __init__(self, dataset):
+        self.dataset_tensor = torch.from_numpy(dataset)
+        self.X = self.dataset_tensor[:, :7]
+        self.Y = self.dataset_tensor[:, 7:]
+        self.train_set, self.val_set, self.test_set = self.split_data(0.2)  # initial val_ratio -> 0.2
+
+        self.A = torch.tensor([[1., 1., 1., 1., 0, 0, 0]])  # (1, 4)
+        self.B = torch.tensor([[-1., -1., -1., -1., -1., 0, 0, 0]])  # (1, 5)
+        self.b = torch.tensor([0.])  # (1, )
+
+        self.constrained_indexes = list(set([index for index in torch.nonzero(self.B)[:, -1].tolist()]))
+        self.unconstrained_indexes = [item for item in range(self.B.shape[1]) if item not in self.constrained_indexes]
+
+    def __len__(self):
+        return len(self.dataset_tensor)
+    
+    def __getitem__(self, idx):
+        return self.dataset_tensor[idx, :]
+
+    def split_data(self, val_ratio, test_ratio=0.2):
+        XY = data.TensorDataset(self.X, self.Y)
+        n_samples = len(XY)
+        n_val = int(val_ratio * n_samples)
+        n_test = int(test_ratio * n_samples)
+        n_train = n_samples - n_val - n_test
+        train_set = data.Subset(XY, range(0, n_train))
+        val_set = data.Subset(XY, range(n_train, n_train + n_val))
+        test_set = data.Subset(XY, range(n_train + n_val, n_samples))
+        return train_set, val_set, test_set
+
+    def resplit_data(self, val_ratio, test_ratio=0.2):
+        self.train_set, self.val_set, self.test_set = self.split_data(val_ratio, test_ratio)
 
 class Data_distillation(data.Dataset):
     def __init__(self, dataset):
