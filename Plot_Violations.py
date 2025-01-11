@@ -4,6 +4,7 @@ from matplotlib import rcParams
 
 rcParams['xtick.labelsize'] = 12  # Optional: Adjust tick label size
 rcParams['ytick.labelsize'] = 12  # Optional: Adjust tick label size
+
 rcParams['font.size'] = 12
 
 Method = ['NN', 'PINN', 'KKThPINN']
