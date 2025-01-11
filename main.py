@@ -6,7 +6,7 @@ import copy
 import os
 
 
-def add_arguments(model, input_dim, hidden_dim, hidden_num, output_dim):
+def add_arguments(model, input_dim, hidden_dim, hidden_num, output_dim, job):
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--model', type=str, default=model, help='NN, PINN, KKThPINN')
@@ -30,7 +30,7 @@ def add_arguments(model, input_dim, hidden_dim, hidden_num, output_dim):
     parser.add_argument('--dataset_type', type=str, default='membrane', help='choose from cstr, plant, distillation')
     parser.add_argument('--dataset_path', default='/home/andresfel9403/KKThNN/KKThPINN/benchmark_membrane.csv', type=str)
     parser.add_argument('--val_ratio', type=float, default=0.2)
-    parser.add_argument('--job', type=str, default='experiment', help='choose from train, experiment')
+    parser.add_argument('--job', type=str, default = job, help='choose from train, experiment')
     parser.add_argument('--runs', type=int, default=10)
 
     args = parser.parse_args()
@@ -85,15 +85,15 @@ def main(args):
                 run_training(args, data)
 
 
-# if __name__ == '__main__':
-#     if not os.path.exists(f'./models'):
-#         os.makedirs(f'./models')
-#     if not os.path.exists(f'./data'):
-#         os.makedirs(f'./data')
-#     if not os.path.exists(f'./data/learning_curves'):
-#         os.makedirs(f'./data/learning_curves')
-#     if not os.path.exists(f'./data/tables'):
-#         os.makedirs(f'./data/tables')
-#     args = add_arguments()
-#     print(args)
-#     main(args)
+if __name__ == '__main__':
+    if not os.path.exists(f'./models'):
+        os.makedirs(f'./models')
+    if not os.path.exists(f'./data'):
+        os.makedirs(f'./data')
+    if not os.path.exists(f'./data/learning_curves'):
+        os.makedirs(f'./data/learning_curves')
+    if not os.path.exists(f'./data/tables'):
+        os.makedirs(f'./data/tables')
+    args = add_arguments('KKThPINN', 7, 32, 2, 8, 'experiment')
+    print(args)
+    main(args)
