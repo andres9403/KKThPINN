@@ -11,10 +11,10 @@ def add_arguments():
 
     parser.add_argument('--model', type=str, default=model, help='NN, PINN, KKThPINN')
     parser.add_argument('--model_id', type=str)
-    parser.add_argument('--input_dim', type=int, default=input_dim, help='3 for cstr, 4 for plant, 5 for distillation, 7 for Membrane')
+    parser.add_argument('--input_dim', type=int, default=input_dim, help='3 for cstr, 4 for plant, 5 for distillation, 7 for Membrane, 5 for PFR')
     parser.add_argument('--hidden_dim', type=int, default=hidden_dim)
     parser.add_argument('--hidden_num', type=int, default=hidden_num)
-    parser.add_argument('--z0_dim', type=int, default=output_dim, help='3 for cstr, 5 for plant, 8, for membrane 10 for distillation')
+    parser.add_argument('--z0_dim', type=int, default=output_dim, help='3 for cstr, 5 for plant, 8, for membrane 10 for distillation, 5 for PFR')
 
     parser.add_argument('--optimizer', type=str, default='adam')
     parser.add_argument('--epochs', type=int, default=1000)
@@ -27,7 +27,7 @@ def add_arguments():
     parser.add_argument("--mu_safe", default=1e+9, type=float)
     parser.add_argument("--dtype", default=32, type=int)
 
-    parser.add_argument('--dataset_type', type=str, default='membrane', help='choose from cstr, plant, distillation')
+    parser.add_argument('--dataset_type', type=str, default='membrane', help='choose from cstr, plant, distillation,membrane, pfr')
     parser.add_argument('--dataset_path', default='/home/andresfel9403/KKThNN/KKThPINN/benchmark_membrane.csv', type=str)
     parser.add_argument('--val_ratio', type=float, default=0.2)
     parser.add_argument('--job', type=str, default = job, help='choose from train, experiment')
@@ -64,14 +64,8 @@ def main(args):
         
         args.run = 0
 
-        if args.scenario == 'demonstration':
-            NNs = ['NN','KKthPINN']
-            args.runs = 5
-        elif args.scenario == 'complete':
-            NNs = ['NN', 'PINN', 'KKThPINN', 'ECNN']
-
         for i in range(args.runs):              
-            for model_name in NNs:
+            for model_name in ['NN', 'KKThPINN']:
                 args.model = model_name
                 if not os.path.exists(f'./models/{args.dataset_type}/{args.model}/{args.val_ratio}'):
                     os.makedirs(f'./models/{args.dataset_type}/{args.model}/{args.val_ratio}')
