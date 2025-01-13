@@ -20,7 +20,7 @@ plt.xlabel("Epoch")
 plt.ylabel("RMSE")
 #plt.yscale("log") 
 plt.xlim(600, 1000)
-plt.ylim(0, 0.02)
+plt.ylim(0, 0.0175)
 plt.legend()
 plt.show()
 

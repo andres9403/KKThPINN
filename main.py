@@ -6,7 +6,7 @@ import copy
 import os
 
 
-def add_arguments(model, input_dim, hidden_dim, hidden_num, output_dim, job):
+def add_arguments():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--model', type=str, default=model, help='NN, PINN, KKThPINN')
@@ -61,8 +61,17 @@ def main(args):
         run_training(args, data)
 
     elif args.job == 'experiment':
-        for i in range(args.runs):
-            for model_name in ['NN', 'PINN', 'KKThPINN', 'ECNN']:
+        
+        args.run = 0
+
+        if args.scenario == 'demonstration':
+            NNs = ['NN','KKthPINN']
+            args.runs = 5
+        elif args.scenario == 'complete':
+            NNs = ['NN', 'PINN', 'KKThPINN', 'ECNN']
+
+        for i in range(args.runs):              
+            for model_name in NNs:
                 args.model = model_name
                 if not os.path.exists(f'./models/{args.dataset_type}/{args.model}/{args.val_ratio}'):
                     os.makedirs(f'./models/{args.dataset_type}/{args.model}/{args.val_ratio}')

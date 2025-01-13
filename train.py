@@ -5,6 +5,7 @@ import torch.optim as optim
 import torch.nn as nn
 from utils import LoadModel, get_optimizer, get_loss_func, get_violation, PINNLoss, ALMLoss
 import copy
+from omlt.io.onnx import write_onnx_model_with_bounds
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 torch.set_default_dtype(torch.float32)
@@ -74,7 +75,10 @@ def run_training(args, data):
                   'violation_train: {:.5f}'.format(train_violation),
                   'violation_val: {:.5f}'.format(val_violation))
     print("Finished!")
-    save_history(args, train_losses, val_losses, train_violations, val_violations)
+    scores = evaluate_model(data, args)
+    #save_history(args, train_losses, val_losses, train_violations, val_violations)
+    file_path = '{}_dist {}-{}.onnx'.format(args.model,args.hidden_dim,args.epochs)
+    checkpoint(model, val_loss, min_loss, args, epoch)
     if args.job == 'experiment':
         scores = evaluate_model(data, args)
 
@@ -268,6 +272,3 @@ def save_history(args, train_losses, val_losses, train_violations, val_violation
     np.save(f'./data/learning_curves/{args.dataset_type}/{args.model}/{args.val_ratio}/{args.model_id}_val_losses_run{args.run}.npy', val_losses)
     np.save(f'./data/learning_curves/{args.dataset_type}/{args.model}/{args.val_ratio}/{args.model_id}_train_violations_run{args.run}.npy', train_violations)
     np.save(f'./data/learning_curves/{args.dataset_type}/{args.model}/{args.val_ratio}/{args.model_id}_val_violations_run{args.run}.npy', val_violations)
-
-
-
