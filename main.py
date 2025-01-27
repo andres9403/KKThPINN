@@ -17,7 +17,7 @@ def add_arguments():
     parser.add_argument('--z0_dim', type=int, default=5, help='3 for cstr, 5 for plant, 8, for membrane 10 for distillation, 5 for PFR')
 
     parser.add_argument('--optimizer', type=str, default='adam')
-    parser.add_argument('--epochs', type=int, default=1000)
+    parser.add_argument('--epochs', type=int, default=10000)
     parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--mu', type=float, default=1)
