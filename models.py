@@ -94,6 +94,7 @@ class ECNN(nn.Module):
         self.fc_fixed2.weight = nn.Parameter(self.Astar, requires_grad=False)
         self.fc_fixed2.bias = nn.Parameter(self.bstar, requires_grad=False)
 
+
     def forward(self, x):
         x0 = x
         for layer in self.layers[:-1]:
